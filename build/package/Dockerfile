@@ -15,7 +15,7 @@ COPY web/ ./
 RUN npm run build
 
 # --- Stage 2: build backend with embedded frontend ----------------------------
-FROM golang:1.25-alpine AS go-builder
+FROM golang:1.26-alpine AS go-builder
 ENV CGO_ENABLED=0
 WORKDIR /src
 RUN apk add --no-cache git

@@ -1,7 +1,7 @@
 # Development image: Go toolchain + air (hot reload) + golang-migrate + golangci-lint.
 # Source is bind-mounted at /workspace by docker-compose.
 # We use 1.25 here to match the toolchain transitive dependencies require.
-FROM golang:1.25
+FROM golang:1.26
 
 ENV GOPATH=/go
 ENV GOCACHE=/root/.cache/go-build
