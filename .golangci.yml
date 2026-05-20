@@ -1,0 +1,48 @@
+# Repo-root pointer for golangci-lint. The canonical config lives under
+# build/ci/golangci.yml; this file just re-exports it so default invocations
+# (`golangci-lint run`) find it.
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - ineffassign
+    - unused
+    - gofmt
+    - goimports
+    # Security & correctness linters.
+    - gosec
+    - bodyclose
+    - noctx
+    - sqlclosecheck
+    - rowserrcheck
+    - nilerr
+
+linters-settings:
+  goimports:
+    local-prefixes: github.com/prexel/prexel
+  gosec:
+    excludes:
+      # G104: errcheck already covers unhandled errors and is more configurable.
+      - G104
+      # G304: file inclusion via variable — we read user-provided paths
+      # intentionally (configs, uploads, etc.); triage case-by-case rather
+      # than failing the whole build.
+      - G304
+
+issues:
+  exclude-dirs:
+    - .air-tmp
+    - web
+    - test/e2e
+  exclude-rules:
+    # Tests intentionally use weak crypto / hardcoded creds / fmt sprintf
+    # patterns gosec flags; not a release-build concern.
+    - path: _test\.go
+      linters:
+        - gosec

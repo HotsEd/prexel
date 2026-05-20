@@ -1,0 +1,821 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    /* ── Prexel brand: graphite + deployment green + network blue ── */
+    --prexel-ink-950: #05070a;
+    --prexel-ink-900: #0a0d12;
+    --prexel-ink-850: #0e1218;
+    --prexel-ink-800: #121821;
+    --prexel-ink-700: #1b2430;
+    --prexel-ink-600: #273243;
+    --prexel-ink-500: #5b677a;
+    --prexel-deploy-50: #ecfdf5;
+    --prexel-deploy-100: #d1fae5;
+    --prexel-deploy-200: #a7f3d0;
+    --prexel-deploy-300: #6ee7b7;
+    --prexel-deploy-400: #34d399;
+    --prexel-deploy-500: #10b981;
+    --prexel-deploy-600: #059669;
+    --prexel-deploy-700: #047857;
+    --prexel-deploy-800: #065f46;
+    --prexel-deploy-900: #064e3b;
+    --prexel-deploy-950: #022c22;
+    --prexel-network-500: #38bdf8;
+    --prexel-warn-500: #f59e0b;
+
+    /*
+        Form-field sizing tokens — SINGLE SOURCE OF TRUTH.
+        Every PrimeVue form component (Input, Select, DatePicker, …) reads
+        these for its padding + height. 9px y / 12px x → 40px tall input.
+    */
+    --p-form-field-padding-y: 9px;
+    --p-form-field-padding-x: 12px;
+    --p-form-field-font-size: 14px;
+    --p-form-field-border-radius: 8px;
+
+    /* ── PrimeVue primary ramp (deployment green) ── */
+    --p-primary-50: var(--prexel-deploy-50);
+    --p-primary-100: var(--prexel-deploy-100);
+    --p-primary-200: var(--prexel-deploy-200);
+    --p-primary-300: var(--prexel-deploy-300);
+    --p-primary-400: var(--prexel-deploy-400);
+    --p-primary-500: var(--prexel-deploy-500);
+    --p-primary-600: var(--prexel-deploy-600);
+    --p-primary-700: var(--prexel-deploy-700);
+    --p-primary-800: var(--prexel-deploy-800);
+    --p-primary-900: var(--prexel-deploy-900);
+    --p-primary-color: var(--p-primary-500);
+    --p-primary-contrast: #ffffff;
+
+    /* ── Surfaces (light) ── */
+    --p-surface-0: #ffffff;
+    --p-surface-50: #fafafa;
+    --p-surface-100: #f4f4f5;
+    --p-surface-200: #e4e4e7;
+    --p-surface-300: #d4d4d8;
+    --p-surface-400: #a1a1aa;
+    --p-surface-500: #71717a;
+    --p-surface-600: #52525b;
+    --p-surface-700: #3f3f46;
+    --p-surface-800: #27272a;
+    --p-surface-900: #18181b;
+    --p-surface-950: #09090b;
+
+    /* ── Semantic (light) ── */
+    --p-bg: var(--p-surface-50);
+    --p-content-bg: var(--p-surface-0);
+    --p-content-border: var(--p-surface-200);
+    --p-text: var(--p-surface-900);
+    --p-text-muted: var(--p-surface-500);
+    --p-text-subtle: var(--p-surface-600);
+    --p-hover: var(--p-surface-100);
+    --p-divider: var(--p-surface-200);
+    --p-input-bg: var(--p-surface-0);
+    --p-input-border: var(--p-surface-300);
+
+    /* ── DataTable ── */
+    --p-datatable-header-cell-background: var(--p-surface-50);
+    --p-datatable-header-cell-color: var(--p-text-muted);
+    --p-datatable-header-cell-border-color: var(--p-divider);
+    --p-datatable-row-background: var(--p-content-bg);
+    --p-datatable-row-color: var(--p-text);
+    --p-datatable-row-hover-background: var(--p-hover);
+    --p-datatable-row-hover-color: var(--p-text);
+    --p-datatable-body-cell-border-color: var(--p-divider);
+    --p-datatable-border-color: var(--p-divider);
+
+    /* ── Sidebar ── */
+    --p-sidebar-bg: var(--p-surface-0);
+    --p-sidebar-border: var(--p-surface-200);
+    --p-sidebar-item: var(--p-surface-700);
+    --p-sidebar-item-hover-bg: var(--p-surface-100);
+    --p-sidebar-item-active-bg: rgba(16, 185, 129, 0.10);
+    --p-sidebar-item-active: var(--p-primary-500);
+
+    /* ── Status ── */
+    --p-success: #22c55e;
+    --p-success-bg: #dcfce7;
+    --p-success-text: #15803d;
+    --p-warning: #f59e0b;
+    --p-warning-bg: #fef3c7;
+    --p-warning-text: #b45309;
+    --p-danger: #ef4444;
+    --p-danger-bg: #fee2e2;
+    --p-danger-text: #b91c1c;
+    --p-neutral-bg: #f4f4f5;
+    --p-neutral-text: #52525b;
+    --p-info: #3b82f6;
+    --p-info-bg: #dbeafe;
+    --p-info-text: #1d4ed8;
+
+    /* ── Type ── */
+    --prexel-font-display: 'Inter', system-ui, sans-serif;
+    --prexel-font-ui: 'Inter', system-ui, sans-serif;
+
+    /* ── Radii ── */
+    --p-r-sm: 6px;
+    --p-r-md: 8px;
+    --p-r-lg: 10px;
+    --p-r-pill: 999px;
+
+    /* ── Shadows ── */
+    --p-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    --p-shadow-md: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+    --p-shadow-lg: 0 8px 24px -4px rgba(0, 0, 0, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+    --p-focus-ring: 0 0 0 3px rgba(16, 185, 129, 0.22);
+
+    --sidebar-w: 248px;
+}
+
+/* ── Dark mode ── */
+html.dark {
+    --p-bg: #080a0f;
+    --p-content-bg: #0d1117;
+    --p-content-border: #202938;
+    --p-text: #f4f7fb;
+    --p-text-muted: #7f8a9b;
+    --p-text-subtle: #a8b3c2;
+    --p-hover: rgba(255, 255, 255, 0.04);
+    --p-divider: #202938;
+    --p-input-bg: #0d1117;
+    --p-input-border: #263244;
+
+    --p-sidebar-bg: rgba(9, 12, 18, 0.92);
+    --p-sidebar-border: #202938;
+    --p-sidebar-item: #a8b3c2;
+    --p-sidebar-item-hover-bg: rgba(255, 255, 255, 0.04);
+    --p-sidebar-item-active-bg: rgba(16, 185, 129, 0.14);
+    --p-sidebar-item-active: #d1fae5;
+
+    --p-surface-0: #0d1117;
+    --p-surface-50: #080a0f;
+    --p-surface-100: rgba(255, 255, 255, 0.04);
+    --p-surface-200: #202938;
+
+    --p-inputtext-background: #0d1117;
+    --p-inputtext-color: #f4f7fb;
+    --p-inputtext-border-color: #263244;
+    --p-inputtext-hover-border-color: #3a4658;
+    --p-inputtext-placeholder-color: #7f8a9b;
+
+    --p-dialog-background: #0d1117;
+    --p-dialog-color: #f4f7fb;
+    --p-dialog-border-color: #202938;
+    --p-dialog-header-color: #f4f7fb;
+
+    --p-popover-background: #0d1117;
+    --p-popover-color: #f4f7fb;
+    --p-popover-border-color: #202938;
+
+    --p-select-background: #0d1117;
+    --p-select-color: #f4f7fb;
+    --p-select-border-color: #263244;
+    --p-select-option-color: #f4f7fb;
+    --p-select-option-focus-background: rgba(255, 255, 255, 0.06);
+
+    --p-tooltip-background: #202938;
+    --p-tooltip-color: #f4f7fb;
+
+    --p-datatable-header-cell-background: #111722;
+    --p-datatable-header-cell-color: #a8b3c2;
+    --p-datatable-header-cell-border-color: #202938;
+    --p-datatable-row-background: #0d1117;
+    --p-datatable-row-color: #f4f7fb;
+    --p-datatable-row-hover-background: rgba(16, 185, 129, 0.08);
+    --p-datatable-row-hover-color: #f4f7fb;
+    --p-datatable-body-cell-border-color: #202938;
+    --p-datatable-border-color: #202938;
+
+    --p-success-bg: rgba(34, 197, 94, 0.15);
+    --p-success-text: #4ade80;
+    --p-warning-bg: rgba(245, 158, 11, 0.15);
+    --p-warning-text: #fbbf24;
+    --p-danger-bg: rgba(239, 68, 68, 0.15);
+    --p-danger-text: #f87171;
+    --p-neutral-bg: rgba(255, 255, 255, 0.06);
+    --p-neutral-text: #aba5cd;
+    --p-info-bg: rgba(59, 130, 246, 0.15);
+    --p-info-text: #60a5fa;
+}
+
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #app { min-height: 100%; }
+
+body {
+    margin: 0;
+    font-family: var(--prexel-font-ui);
+    background:
+        linear-gradient(180deg, rgba(56, 189, 248, 0.045), transparent 360px),
+        var(--p-bg);
+    color: var(--p-text);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 200ms ease, color 200ms ease;
+}
+
+/* ── Status tags ── */
+.p-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: var(--p-r-pill);
+}
+.p-tag-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+.p-tag-success { background: var(--p-success-bg); color: var(--p-success-text); }
+.p-tag-warn    { background: var(--p-warning-bg); color: var(--p-warning-text); }
+.p-tag-danger  { background: var(--p-danger-bg);  color: var(--p-danger-text); }
+.p-tag-info    { background: var(--p-info-bg);    color: var(--p-info-text); }
+.p-tag-neutral { background: var(--p-neutral-bg); color: var(--p-neutral-text); }
+
+/* ── App shell ── */
+.app-shell { min-height: 100vh; background: var(--p-bg); }
+
+/* ── Main content ── */
+.app-content { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+/* ── Lock body scroll while the mobile sidebar drawer is open. ── */
+@media (max-width: 900px) {
+    body.is-sidebar-open { overflow: hidden; }
+}
+
+/* ── Floating PrimeVue-style vertical pill sidebar ── */
+.pv-sidebar {
+    position: fixed;
+    left: 24px; top: 24px; bottom: 24px;
+    width: 72px;
+    background: var(--p-content-bg);
+    border: 1px solid var(--p-content-border);
+    border-radius: 18px;
+    box-shadow: 0 18px 42px -30px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0;
+    gap: 6px;
+    z-index: 20;
+    transition: transform 220ms ease;
+}
+
+@media (max-width: 900px) {
+    .pv-sidebar {
+        left: 12px; top: 12px; bottom: 12px;
+        transform: translateX(calc(-100% - 16px));
+    }
+    .pv-sidebar.pv-sidebar--open { transform: translateX(0); }
+}
+
+.pv-sidebar-logo {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 18px;
+}
+
+.pv-sidebar-item {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    border: 0;
+    background: transparent;
+    color: var(--p-text-muted);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 160ms;
+    text-decoration: none;
+}
+.pv-sidebar-item:hover { background: var(--p-hover); color: var(--p-text); }
+.pv-sidebar-item.active {
+    background: var(--p-sidebar-item-active-bg);
+    color: var(--p-sidebar-item-active);
+    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.28);
+}
+
+.pv-sidebar-item .pv-badge {
+    position: absolute;
+    top: 4px; right: 4px;
+    min-width: 16px; height: 16px;
+    border-radius: 999px;
+    background: var(--p-primary-500);
+    color: #fff;
+    font-size: 9px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--p-content-bg);
+}
+.pv-sidebar-item.active .pv-badge { background: #fff; color: var(--p-primary-500); }
+
+.pv-sidebar-spacer { flex: 1; }
+
+.pv-sidebar-avatar {
+    width: 40px; height: 40px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--prexel-deploy-500), var(--prexel-network-500));
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 12px;
+    margin-top: 8px;
+    cursor: pointer;
+    border: 0;
+    font-family: inherit;
+    transition: outline 160ms;
+    overflow: hidden;
+}
+.pv-sidebar-avatar.is-active {
+    outline: 2px solid var(--p-primary-500);
+    outline-offset: 2px;
+}
+
+/* Content area offset for floating sidebar */
+.pv-content {
+    margin-left: 120px;
+    padding: 28px 32px 48px 0;
+    width: calc(100% - 120px);
+    box-sizing: border-box;
+}
+@media (max-width: 900px) {
+    .pv-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 64px 16px 32px;
+    }
+}
+
+/* ── PrimeVue Aura panel ── */
+.pv-panel {
+    background: var(--p-content-bg);
+    border: 1px solid var(--p-content-border);
+    border-radius: 12px;
+    padding: 24px;
+}
+
+/* ── Buttons ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--p-r-md);
+    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 120ms, border-color 120ms;
+    font-family: inherit;
+}
+.btn-primary {
+    background: var(--p-text);
+    color: var(--p-bg);
+    border-color: var(--p-text);
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-secondary {
+    background: var(--p-content-bg);
+    color: var(--p-text);
+    border-color: var(--p-content-border);
+}
+.btn-secondary:hover { background: var(--p-hover); }
+
+/* ── Input ── */
+.input-wrap { position: relative; }
+.input-wrap .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--p-text-muted);
+    pointer-events: none;
+}
+
+.p-inputtext {
+    width: 100%;
+    padding: 9px 12px;
+    min-height: 40px;
+    box-sizing: border-box;
+    border: 1px solid var(--p-input-border);
+    border-radius: var(--p-r-md);
+    background: var(--p-input-bg);
+    color: var(--p-text);
+    font-size: 14px;
+    line-height: 1.25;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 120ms, box-shadow 120ms;
+}
+.p-inputtext:focus {
+    border-color: var(--p-primary-500);
+    box-shadow: var(--p-focus-ring);
+}
+.input-wrap .p-inputtext { padding-left: 38px; }
+
+/* ── Textarea ──
+   PrimeVue's <Textarea> renders a bare <textarea class="p-textarea"> —
+   it does NOT compose .p-inputtext, so without an explicit rule it
+   inherits the Aura default surface (lighter in dark mode), which made
+   it stand out from every other input on the form.
+
+   IMPORTANT — specificity bump. PrimeVue 4 injects its own
+   `.p-textarea { color: dt('textarea.color'); background: …; … }` via
+   JS at runtime. Those rules have the SAME specificity as a plain
+   `.p-textarea {…}` here, and because they're inserted after our
+   stylesheet, they win the tiebreaker — that's why our prior rule was
+   being silently overridden, leaving the typed message rendered in the
+   muted Aura form-field color (nearly invisible in dark mode).
+   Selecting `textarea.p-textarea` adds one element to the selector and
+   wins on specificity (0,1,1 > 0,1,0). No !important needed.
+
+   Mirror the .p-inputtext look exactly, only relaxing the fixed height
+   so the rows attribute behaves as expected.
+*/
+textarea.p-textarea {
+    width: 100%;
+    padding: 9px 12px;
+    box-sizing: border-box;
+    border: 1px solid var(--p-input-border);
+    border-radius: var(--p-r-md);
+    background: var(--p-input-bg);
+    color: var(--p-text);
+    font-size: 14px;
+    line-height: 1.45;
+    font-family: inherit;
+    outline: none;
+    resize: vertical;
+    transition: border-color 120ms, box-shadow 120ms;
+}
+textarea.p-textarea:hover {
+    border-color: var(--p-input-border);
+}
+textarea.p-textarea:focus {
+    border-color: var(--p-primary-500);
+    box-shadow: var(--p-focus-ring);
+    outline: none;
+}
+textarea.p-textarea::placeholder { color: var(--p-text-muted); }
+
+/* ── Select ── */
+.ui-select-overlay,
+.p-select-overlay {
+    border: 1px solid var(--p-content-border) !important;
+    border-radius: var(--p-r-md) !important;
+    background: var(--p-content-bg) !important;
+    color: var(--p-text) !important;
+    box-shadow: var(--p-shadow-lg) !important;
+    overflow: hidden;
+}
+.ui-select-overlay .p-select-header,
+.p-select-overlay .p-select-header {
+    border-bottom: 1px solid var(--p-divider);
+    background: var(--p-content-bg);
+    color: var(--p-text);
+    padding: 8px;
+}
+.ui-select-overlay .p-select-list,
+.p-select-overlay .p-select-list {
+    background: var(--p-content-bg);
+    color: var(--p-text);
+    padding: 4px;
+}
+.ui-select-overlay .p-select-option,
+.p-select-overlay .p-select-option {
+    border-radius: var(--p-r-sm);
+    color: var(--p-text) !important;
+    margin: 1px 0;
+    padding: 8px 10px;
+}
+.ui-select-overlay .p-select-option *,
+.p-select-overlay .p-select-option * {
+    color: inherit !important;
+}
+.ui-select-overlay .p-select-option:not(.p-disabled):hover,
+.p-select-overlay .p-select-option:not(.p-disabled):hover,
+.ui-select-overlay .p-select-option[data-p-focused="true"],
+.p-select-overlay .p-select-option[data-p-focused="true"] {
+    background: var(--p-hover) !important;
+    color: var(--p-text) !important;
+}
+.ui-select-overlay .p-select-option[data-p-selected="true"],
+.p-select-overlay .p-select-option[data-p-selected="true"] {
+    background: color-mix(in srgb, var(--p-primary-color), transparent 86%) !important;
+    color: var(--p-primary-color) !important;
+}
+.ui-select-overlay .p-select-option[data-p-selected="true"]:not(.p-disabled):hover,
+.p-select-overlay .p-select-option[data-p-selected="true"]:not(.p-disabled):hover,
+.ui-select-overlay .p-select-option[data-p-selected="true"][data-p-focused="true"],
+.p-select-overlay .p-select-option[data-p-selected="true"][data-p-focused="true"] {
+    color: var(--p-text) !important;
+}
+.ui-select-overlay .p-select-empty-message,
+.p-select-overlay .p-select-empty-message {
+    color: var(--p-text-muted);
+    padding: 10px 12px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Login screen layout ── */
+.login-screen {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--p-bg);
+}
+@media (max-width: 960px) {
+    .login-screen { grid-template-columns: 1fr; }
+    .login-aside { display: none !important; }
+}
+
+.login-form-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+}
+.login-form {
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-brand {
+    /*
+       Wordmark + tagline now stack vertically — the wordmark already
+       carries the brand name so the second line is positioning text,
+       not a redundant repetition of "Prexel".
+    */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 40px;
+}
+.login-brand-name {
+    /* Kept for any legacy markup that still renders a text-only brand. */
+    font-family: var(--prexel-font-display);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.025em;
+    color: var(--p-text);
+    line-height: 1;
+}
+.login-brand-product {
+    font-size: 11px;
+    color: var(--p-text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    /* Sits below the wordmark, slight indent to align under the mark. */
+    margin-left: 56px;
+}
+.login-title {
+    font-family: var(--prexel-font-display);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--p-text);
+    line-height: 1.15;
+    margin: 0 0 8px;
+}
+.login-sub {
+    font-size: 14px;
+    color: var(--p-text-muted);
+    margin: 0 0 32px;
+}
+
+.login-aside {
+    background:
+        radial-gradient(circle at 20% 0%, rgba(16, 185, 129, 0.20), transparent 34%),
+        radial-gradient(circle at 84% 22%, rgba(56, 189, 248, 0.18), transparent 30%),
+        linear-gradient(160deg, #080a0f 0%, #0e141c 58%, #0a0d12 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px;
+    color: #fff;
+}
+.aside-pill {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(16, 185, 129, 0.22), rgba(56, 189, 248, 0.20));
+    border-radius: 999px;
+    transform: rotate(-31deg);
+}
+.aside-quote {
+    font-family: var(--prexel-font-display);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+}
+.aside-strip {
+    display: flex;
+    gap: 32px;
+    margin-top: 32px;
+}
+.aside-stat-value {
+    font-family: var(--prexel-font-display);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+.aside-stat-label {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 4px;
+}
+
+/* ── Panel for content areas ── */
+.panel {
+    background: var(--p-content-bg);
+    border: 1px solid var(--p-content-border);
+    border-radius: var(--p-r-lg);
+    overflow: hidden;
+}
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--p-divider);
+    gap: 16px;
+}
+.panel-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--p-text);
+    letter-spacing: -0.01em;
+}
+.panel-subtitle {
+    font-size: 12px;
+    color: var(--p-text-muted);
+    margin-top: 2px;
+}
+.panel-body { padding: 16px 20px 20px; }
+
+/* ── DataTable styling ── */
+.p-datatable {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    background: var(--p-content-bg);
+    color: var(--p-text);
+    font-size: 14px;
+    overflow: hidden;
+}
+.p-datatable-table,
+.p-datatable-table-container {
+    background: var(--p-content-bg);
+}
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable thead th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--p-text-muted);
+    padding: 12px 16px;
+    background: var(--p-datatable-header-cell-background);
+    border-bottom: 1px solid var(--p-divider);
+}
+.p-datatable .p-datatable-tbody > tr {
+    background: var(--p-datatable-row-background);
+    color: var(--p-datatable-row-color);
+}
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--p-datatable-body-cell-border-color);
+    color: var(--p-text);
+    vertical-align: middle;
+}
+.p-datatable .p-datatable-tbody > tr:last-child > td,
+.p-datatable tbody tr:last-child td { border-bottom: none; }
+.p-datatable .p-datatable-tbody > tr,
+.p-datatable tbody tr { transition: background-color 120ms, color 120ms; }
+.p-datatable-hoverable .p-datatable-tbody > tr:not(.p-datatable-row-selected):hover,
+.p-datatable tbody tr:hover {
+    background: var(--p-datatable-row-hover-background);
+    color: var(--p-datatable-row-hover-color);
+}
+
+/* ── Activity icon (used by toast) ── */
+.activity-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.activity-icon.primary { background: rgba(16, 185, 129, 0.12);  color: var(--p-primary-500); }
+.activity-icon.green  { background: rgba(34, 197, 94, 0.12);  color: var(--prexel-green-500); }
+.activity-icon.amber  { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.activity-icon.red    { background: rgba(239, 68, 68, 0.12);  color: #ef4444; }
+
+/* ── Toast tweaks ── */
+.p-toast.p-component { width: 360px; }
+.p-toast .p-toast-message {
+    background: var(--p-content-bg);
+    border: 1px solid var(--p-content-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 28px -6px rgba(0, 0, 0, 0.12);
+    color: var(--p-text);
+    margin: 0 0 10px;
+    overflow: hidden;
+}
+.p-toast .p-toast-message .p-toast-message-content {
+    padding: 12px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-left: 0;
+    color: var(--p-text);
+}
+.p-toast .p-toast-message .p-toast-message-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.p-toast .p-toast-message .p-toast-summary {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--p-text);
+    line-height: 1.35;
+}
+.p-toast .p-toast-message .p-toast-detail {
+    font-size: 12px;
+    color: var(--p-text-muted);
+    line-height: 1.45;
+    margin: 0;
+}
+.p-toast .p-toast-message .p-toast-close-button {
+    width: 24px; height: 24px;
+    flex-shrink: 0;
+    color: var(--p-text-muted);
+    border-radius: 6px;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin: -2px -4px 0 0;
+    transition: background 120ms;
+}
+.p-toast .p-toast-message .p-toast-close-button:hover {
+    background: var(--p-hover);
+    color: var(--p-text);
+}
+
+html.dark .p-toast .p-toast-message {
+    background: var(--p-content-bg);
+    border-color: var(--p-content-border);
+    box-shadow: 0 8px 28px -6px rgba(0, 0, 0, 0.45);
+    color: var(--p-text);
+}
+html.dark .p-toast .p-toast-message .p-toast-summary { color: var(--p-text); }
+html.dark .p-toast .p-toast-message .p-toast-detail { color: var(--p-text-muted); }
+
+/* ── Page header (used on listing pages) ── */
+.page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+.page-header__title {
+    font-family: var(--prexel-font-display);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--p-text);
+    margin: 0;
+}
+.page-header__sub {
+    font-size: 13px;
+    color: var(--p-text-muted);
+    margin-top: 4px;
+}
+
+/*
+   App-card grid removed — AppsView now uses a table (see
+   /pages/apps/AppsView.vue → `.apps-table*`). The card classes
+   were not consumed anywhere else, so the dead CSS was dropped
+   rather than left around to confuse future grep.
+*/

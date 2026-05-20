@@ -1,0 +1,3 @@
+NAME    SERVER   STATUS   DOMAIN           LAST DEPLOY
+web     local    running  web.example.com  success (2026-05-11 12:00Z)
+worker  prod-eu  idle     -                -

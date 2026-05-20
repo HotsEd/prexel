@@ -1,0 +1,12 @@
+-- Migration 013 — persist the deploy failure cause.
+--
+-- Up until now the only record of WHY a deploy failed was the build
+-- log file (`log_path`). Surfacing that in the UI required parsing
+-- text heuristics ("find the last `[stderr]` line") which is brittle
+-- and hides multi-line errors. A dedicated column lets the engine
+-- write the wrapped error chain (`build: ...: docker_compose ...`)
+-- once at the moment of failure, and the UI renders it verbatim.
+--
+-- Nullable + no default so successful deploys carry NULL and the
+-- column is only set when failDeploy runs.
+ALTER TABLE deployments ADD COLUMN error_message TEXT;

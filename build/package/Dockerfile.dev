@@ -1,0 +1,58 @@
+# Development image: Go toolchain + air (hot reload) + golang-migrate + golangci-lint.
+# Source is bind-mounted at /workspace by docker-compose.
+# We use 1.25 here to match the toolchain transitive dependencies require.
+FROM golang:1.25
+
+ENV GOPATH=/go
+ENV GOCACHE=/root/.cache/go-build
+ENV PATH=/go/bin:$PATH
+ENV GOFLAGS=-buildvcs=false
+
+# Pin tool versions in one place. Bumping these forces an image rebuild and
+# CI sees the change in the diff.
+ARG AIR_VERSION=v1.65.2
+ARG MIGRATE_VERSION=v4.18.1
+ARG GOLANGCI_VERSION=v1.64.8
+# SHA256 of the upstream install scripts / release artifacts. Recomputed via:
+#   curl -fsSL <url> | sha256sum
+# If you bump *_VERSION above, recompute the matching SHA below.
+# v1.64.8 is the last v1 release that still supports Go 1.25; v2.x ships
+# breaking config changes (yaml schema rewrite) we haven't migrated to yet.
+ARG GOLANGCI_INSTALL_SHA256=9e99d38f3213411a1b6175e5b535c72e37c7ed42ccf251d331385a3f97b695e7
+ARG MIGRATE_TARBALL_SHA256=2a08137b4720aa457bc760540723e313783f1fab27473463bdcc5fc2e9252959
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        git \
+        curl \
+        sqlite3 \
+        openssh-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# air — hot reload runner. Pinned to a known-good release (Go 1.25 compatible).
+RUN go install github.com/air-verse/air@${AIR_VERSION}
+
+# golang-migrate CLI for `make migrate-*` targets. Verify checksum of the
+# release tarball before extracting.
+RUN curl -fsSL -o /tmp/migrate.tar.gz \
+        https://github.com/golang-migrate/migrate/releases/download/${MIGRATE_VERSION}/migrate.linux-amd64.tar.gz \
+    && echo "${MIGRATE_TARBALL_SHA256}  /tmp/migrate.tar.gz" | sha256sum -c - \
+    && tar -xz -C /usr/local/bin -f /tmp/migrate.tar.gz migrate \
+    && chmod +x /usr/local/bin/migrate \
+    && rm -f /tmp/migrate.tar.gz
+
+# golangci-lint for `make lint`. Pin the install script to a tagged release
+# (not `master`) and verify its checksum before piping into sh.
+RUN curl -fsSL -o /tmp/glci.sh \
+        https://raw.githubusercontent.com/golangci/golangci-lint/refs/tags/${GOLANGCI_VERSION}/install.sh \
+    && echo "${GOLANGCI_INSTALL_SHA256}  /tmp/glci.sh" | sha256sum -c - \
+    && sh /tmp/glci.sh -b /usr/local/bin ${GOLANGCI_VERSION} \
+    && rm -f /tmp/glci.sh
+
+WORKDIR /workspace
+
+EXPOSE 3000
+
+# Default command: hot-reload via air. Compose overrides as needed for prexel-cli.
+CMD ["air", "-c", ".air.toml"]

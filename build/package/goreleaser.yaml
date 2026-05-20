@@ -1,0 +1,86 @@
+version: 2
+
+project_name: prexel
+
+# NOTE: `before: hooks` intentionally removed. `go mod tidy` must be run
+# locally before tagging a release — running it on the CI runner with
+# GITHUB_TOKEN access executes arbitrary code from go module dependencies,
+# which we want to avoid in a supply-chain hostile environment.
+# See docs/release.md for the pre-release checklist.
+
+builds:
+  - id: prexel
+    main: ./
+    binary: prexel
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X github.com/prexel/prexel/internal/cli/command.Version={{ .Version }}
+    goos: [linux, darwin]
+    goarch: [amd64, arm64]
+
+archives:
+  - id: prexel
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+      - LICENSE*
+      - init/prexel.service
+      - configs/prexel.env.example
+      - scripts/install.sh
+
+checksum:
+  name_template: "checksums.txt"
+
+# Keyless signing of the checksums file via cosign + Sigstore OIDC.
+# The release workflow grants `id-token: write` so cosign can mint
+# short-lived certificates from Fulcio without long-lived secrets.
+signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: '${artifact}.pem'
+    args:
+      - sign-blob
+      - '--output-certificate=${certificate}'
+      - '--output-signature=${signature}'
+      - '${artifact}'
+      - --yes
+    artifacts: checksum
+    output: true
+
+# Software Bill of Materials per archive (requires syft on the runner).
+sboms:
+  - artifacts: archive
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+
+release:
+  draft: true
+  prerelease: auto
+
+# Homebrew tap — published to prexel/homebrew-tap as `prexel`.
+# Disabled (skip_upload: true) until the tap repository is created; flip to
+# false to start publishing.
+brews:
+  - name: prexel
+    repository:
+      owner: prexel
+      name: homebrew-tap
+    homepage: "https://prexel.dev"
+    description: "Self-hosted deploy platform — deploy without limits."
+    license: "MIT"
+    skip_upload: true
+    install: |
+      bin.install "prexel"
+    test: |
+      system "#{bin}/prexel", "version"

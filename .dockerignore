@@ -1,0 +1,12 @@
+.git
+.github
+.air-tmp
+tmp
+**/node_modules
+web/dist
+.idea
+.vscode
+*.log
+.DS_Store
+test
+docs

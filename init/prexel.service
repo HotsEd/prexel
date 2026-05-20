@@ -1,0 +1,48 @@
+[Unit]
+Description=Prexel — self-hosted deploy platform
+Documentation=https://hotsed.atlassian.net/wiki/spaces/Prexel/overview
+After=network-online.target docker.service
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=simple
+User=prexel
+Group=prexel
+# docker is needed for the daemon to talk to /var/run/docker.sock.
+SupplementaryGroups=docker
+EnvironmentFile=/etc/prexel/prexel.env
+ExecStart=/usr/local/bin/prexel serve
+WorkingDirectory=/var/lib/prexel
+Restart=always
+RestartSec=5
+LimitNOFILE=65536
+
+# Allow the unprivileged user to bind 80/443 for HTTP/HTTPS without setuid.
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+# Hardening — keep the daemon's blast radius tight.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/prexel /var/log/prexel
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+SystemCallArchitectures=native
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+# Intentionally omitted: MemoryDenyWriteExecute (breaks Go's JIT-free runtime
+# under some conditions) and SystemCallFilter (Go uses a broad surface; needs
+# a curated allow-list before it's safe to enable).
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+{
+  "admin": {
+    "//": "Admin API binds 0.0.0.0:2019 *inside* the container so the prexel daemon on prexel-net can call us via http://caddy:2019. The compose file maps this port only to host 127.0.0.1, and enforce_origin/origins below blocks DNS-rebinding from arbitrary Host headers. In prod, prexel and caddy share the same docker network and host:2019 is not published at all.",
+    "listen": "0.0.0.0:2019",
+    "enforce_origin": true,
+    "origins": [
+      "localhost:2019",
+      "127.0.0.1:2019",
+      "caddy:2019"
+    ]
+  },
+  "logging": {
+    "logs": {
+      "default": {
+        "level": "INFO"
+      }
+    }
+  },
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "listen": [":80", ":443"],
+          "routes": [],
+          "automatic_https": {
+            "disable": false
+          }
+        }
+      }
+    }
+  }
+}

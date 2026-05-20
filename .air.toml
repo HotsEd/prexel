@@ -1,0 +1,22 @@
+# air configuration — hot reload for `prexel serve` in dev.
+# See https://github.com/air-verse/air for full options.
+
+root = "."
+tmp_dir = ".air-tmp"
+
+[build]
+  cmd = "go build -buildvcs=false -o ./.air-tmp/prexel ."
+  bin = "./.air-tmp/prexel"
+  full_bin = "./.air-tmp/prexel serve"
+  include_ext = ["go", "sql", "tmpl"]
+  exclude_dir = ["web", "test", "tmp", ".air-tmp", ".git", "node_modules", "build"]
+  delay = 500
+  stop_on_error = true
+  send_interrupt = true
+  kill_delay = "3s"
+
+[log]
+  time = true
+
+[misc]
+  clean_on_exit = true

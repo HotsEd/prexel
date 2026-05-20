@@ -1,0 +1,99 @@
+# Prexel development environment. Everything runs in Docker:
+#   - prexel:     Go server with `air` hot reload, source bind-mounted.
+#   - web:        Vite dev server (HMR) for the Vue frontend.
+#   - caddy:      reverse proxy (admin API exposed only on host loopback).
+#   - prexel-cli: ad-hoc runner for client subcommands (profile `tools`).
+# All services share the `prexel-net` network so apps deployed by prexel can
+# reach each other and Caddy by container name.
+#
+# Secrets:
+#   PREXEL_SECRET_KEY / PREXEL_JWT_SECRET come from ../.env.dev, which is
+#   generated on first `scripts/dev-up.sh up` and ignored by git. Never commit
+#   that file. See .env.dev.example for the schema.
+
+name: prexel
+
+services:
+  prexel:
+    build:
+      context: ..
+      dockerfile: build/package/Dockerfile.dev
+    command: air -c .air.toml
+    volumes:
+      - ..:/workspace
+      # Mount the host Docker socket so prexel can manage app containers on
+      # the host engine. Privileged-ish: documented in scripts/dev-up.sh.
+      - /var/run/docker.sock:/var/run/docker.sock
+      - prexel-data:/var/lib/prexel
+      - go-mod-cache:/go/pkg/mod
+      - go-build-cache:/root/.cache/go-build
+    ports:
+      # Host port 3000 is often taken by other dev stacks. We expose Prexel on
+      # 3443 (HTTPS, self-signed). Override via PREXEL_HOST_PORT if you want
+      # a different mapping.
+      - "${PREXEL_HOST_PORT:-3443}:3000"
+    env_file:
+      - ../.env.dev
+    environment:
+      PREXEL_ENV: development
+      PREXEL_PORT: "3000"
+      PREXEL_DATA_DIR: /var/lib/prexel
+      PREXEL_INSTANCE_URL: https://localhost:3443
+    networks: [prexel-net]
+    depends_on: [caddy]
+
+  web:
+    image: node:20-alpine
+    working_dir: /workspace/web
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes:
+      - ..:/workspace
+      - web-node-modules:/workspace/web/node_modules
+    ports:
+      - "5173:5173"
+    networks: [prexel-net]
+
+  caddy:
+    image: caddy:2-alpine
+    volumes:
+      - ../configs/caddy.base.json.tmpl:/etc/caddy/caddy.json:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    command: ["caddy", "run", "--config", "/etc/caddy/caddy.json"]
+    ports:
+      - "80:80"
+      - "443:443"
+      # Caddy admin: bound only to host loopback. Inside the container Caddy
+      # listens on 0.0.0.0:2019 so the prexel daemon on prexel-net can reach
+      # it via http://caddy:2019. enforce_origin + origins allowlist in
+      # caddy.base.json.tmpl prevents DNS rebinding from arbitrary hosts.
+      - "127.0.0.1:2019:2019"
+    networks: [prexel-net]
+
+  prexel-cli:
+    build:
+      context: ..
+      dockerfile: build/package/Dockerfile.dev
+    volumes:
+      - ..:/workspace
+      - prexel-cli-config:/root/.prexel
+      - go-mod-cache:/go/pkg/mod
+      - go-build-cache:/root/.cache/go-build
+    working_dir: /workspace
+    entrypoint: ["go", "run", "-buildvcs=false", "."]
+    networks: [prexel-net]
+    profiles: [tools]
+
+networks:
+  prexel-net:
+    name: prexel-net
+    driver: bridge
+
+volumes:
+  prexel-data:
+  prexel-cli-config:
+  caddy-data:
+  caddy-config:
+  web-node-modules:
+  go-mod-cache:
+  go-build-cache:
