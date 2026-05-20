@@ -18,7 +18,7 @@ jobs:
           cache: true
       - name: Ensure web/dist placeholder exists
         run: mkdir -p web/dist && touch web/dist/.gitkeep
-      - uses: golangci/golangci-lint-action@8564da7cb3c6866ed1da648ca8f00a258ef0c802 # v6.5.2
+      - uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84 # v6.5.2
         with:
           # Last v1 release supporting Go 1.25 — keep aligned with Dockerfile.dev.
           version: v1.64.8
