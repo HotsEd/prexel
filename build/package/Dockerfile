@@ -4,7 +4,7 @@
 # Final stage is distroless/nonroot containing only the binary.
 
 # --- Stage 1: build frontend ---------------------------------------------------
-FROM node:20-alpine AS web-builder
+FROM node:26-alpine AS web-builder
 WORKDIR /web
 COPY web/package.json web/package-lock.json* ./
 # `npm ci` is strict: fails if package-lock.json is out of sync with package.json,
